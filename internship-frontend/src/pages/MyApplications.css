@@ -1261,6 +1261,41 @@
   font-style: italic;
 }
 
+.ma-cdialog-input-wrap {
+  width: 100%;
+  margin-top: 16px;
+  text-align: left;
+}
+.ma-cdialog-input-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+.ma-cdialog-textarea {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  color: #1e293b;
+  background: #f8fafc;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+.ma-cdialog-textarea:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+  background: #fff;
+}
+.ma-cdialog--default .ma-cdialog-textarea:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
+}
+
 .ma-cdialog-actions {
   display: flex;
   gap: 10px;

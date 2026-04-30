@@ -21,6 +21,7 @@ const MyApplications = () => {
   const [interviewActionId, setInterviewActionId] = useState(null); // appId being confirmed/declined for interview
   const [confirmModal, setConfirmModal] = useState(null);
   const confirmResolveRef = useRef(null);
+  const [dialogInput, setDialogInput] = useState('');
 
   const handleCopyLink = (link) => {
     navigator.clipboard.writeText(link).then(() => {
@@ -29,8 +30,13 @@ const MyApplications = () => {
     });
   };
 
-  const showConfirm = (opts) => new Promise(resolve => { confirmResolveRef.current = resolve; setConfirmModal(opts); });
-  const closeConfirm = (result) => { confirmResolveRef.current?.(result); confirmResolveRef.current = null; setConfirmModal(null); };
+  const showConfirm = (opts) => new Promise(resolve => { confirmResolveRef.current = resolve; setDialogInput(''); setConfirmModal(opts); });
+  const closeConfirm = (ok) => {
+    confirmResolveRef.current?.(ok ? (confirmModal?.hasInput ? dialogInput : true) : false);
+    confirmResolveRef.current = null;
+    setConfirmModal(null);
+    setDialogInput('');
+  };
 
   // Returns days remaining in 7-day withdrawal window, or null if not applicable
   const withdrawDaysLeft = (app) => {
@@ -173,17 +179,21 @@ const MyApplications = () => {
   };
 
   const handleDeclineOffer = async (appId) => {
-    const ok = await showConfirm({
+    const result = await showConfirm({
       type: 'danger',
       title: 'Decline This Offer?',
       message: 'The company will be notified that you have declined their offer.',
       confirmText: 'Yes, Decline',
-      cancelText: 'Keep Offer'
+      cancelText: 'Keep Offer',
+      hasInput: true,
+      inputLabel: 'Reason for declining (optional)',
+      inputPlaceholder: 'e.g. Already accepted another offer, Schedule conflict...'
     });
-    if (!ok) return;
+    if (result === false) return;
+    const feedback = typeof result === 'string' ? result.trim() : '';
     setDecliningOfferId(appId);
     try {
-      await api.post(`/applications/${appId}/decline-offer`);
+      await api.post(`/applications/${appId}/decline-offer`, { feedback });
       setApplications(prev => prev.map(app =>
         app.id === appId ? { ...app, status: 'student_withdrawn' } : app
       ));
@@ -1063,6 +1073,19 @@ const MyApplications = () => {
             <h3 className="ma-cdialog-title">{confirmModal.title}</h3>
             <p className="ma-cdialog-msg">{confirmModal.message}</p>
             {confirmModal.subtext && <p className="ma-cdialog-sub">{confirmModal.subtext}</p>}
+            {confirmModal.hasInput && (
+              <div className="ma-cdialog-input-wrap">
+                <label className="ma-cdialog-input-label">{confirmModal.inputLabel}</label>
+                <textarea
+                  className="ma-cdialog-textarea"
+                  rows={3}
+                  placeholder={confirmModal.inputPlaceholder || ''}
+                  value={dialogInput}
+                  onChange={e => setDialogInput(e.target.value)}
+                  autoFocus
+                />
+              </div>
+            )}
             <div className="ma-cdialog-actions">
               <button className="ma-cdialog-cancel" onClick={() => closeConfirm(false)}>
                 {confirmModal.cancelText || 'Cancel'}
