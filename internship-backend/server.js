@@ -19,10 +19,17 @@ const facultyAdminRoutes = require('./routes/faculty-admin');
 
 const app = express();
 app.use(cors({
-  origin: [
-    'https://senior-project-internship-matching-system-platform-dm1t6xdwt.vercel.app',
-    'http://localhost:3000',
-  ],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow localhost
+    if (origin.startsWith('http://localhost')) return callback(null, true);
+    // Allow all Vercel deployments for this project
+    if (/^https:\/\/senior-project-internship-matching-system-platform.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }));
