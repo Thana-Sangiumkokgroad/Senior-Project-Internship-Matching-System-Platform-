@@ -18,7 +18,13 @@ const favoritesRoutes = require('./routes/favorites');
 const facultyAdminRoutes = require('./routes/faculty-admin');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://senior-project-internship-matching-system-platform-dm1t6xdwt.vercel.app',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 

@@ -549,6 +549,7 @@ router.post('/:id/withdraw-confirmation', authMiddleware, async (req, res) => {
 // Student declines a company's accepted offer (before confirming)
 router.post('/:id/decline-offer', authMiddleware, async (req, res) => {
   try {
+    const { feedback } = req.body;
     const appResult = await db.query(
       `SELECT a.*, s.id AS student_id, s.name AS student_name FROM applications a
        JOIN students s ON a.student_id = s.id
@@ -580,7 +581,7 @@ router.post('/:id/decline-offer', authMiddleware, async (req, res) => {
          JOIN internships i ON a.internship_id = i.id
          JOIN companies c ON i.company_id = c.id
          WHERE a.id = $1`,
-        [req.params.id, `${app.student_name} has declined your offer. The position is now open again.`]
+        [req.params.id, `${app.student_name} has declined your offer. The position is now open again.${feedback ? ` Reason: ${feedback}` : ''}`]
       );
     } catch (notifErr) {
       console.warn('Notification skipped (non-fatal):', notifErr.message);

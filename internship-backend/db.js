@@ -1,12 +1,15 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Parse DATABASE_URL manually so pg doesn't mis-parse usernames like "postgres.ref"
+const dbUrl = new URL(process.env.DATABASE_URL);
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  database: process.env.DB_NAME || 'internship_system',
-  port: parseInt(process.env.DB_PORT, 10) || 5432,
+  host:     dbUrl.hostname,
+  port:     parseInt(dbUrl.port, 10),
+  database: dbUrl.pathname.replace(/^\//, ''),
+  user:     decodeURIComponent(dbUrl.username),
+  password: decodeURIComponent(dbUrl.password),
+  ssl:      { rejectUnauthorized: false },
 });
 
 pool.on('connect', () => {
