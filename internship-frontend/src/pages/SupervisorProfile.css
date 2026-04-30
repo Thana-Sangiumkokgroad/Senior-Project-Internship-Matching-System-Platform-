@@ -1,0 +1,76 @@
+.supervisor-profile-page {
+  background-color: #F5F8FA;
+  min-height: 100vh;
+  padding-bottom: 40px;
+  margin-left: 250px;
+  padding-top: 20px;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  padding: 40px;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 5px 20px rgba(20, 184, 166, 0.3);
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+  opacity: 0.95;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px;
+  font-weight: 600;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.form-control:focus {
+  border-color: #14B8A6;
+  box-shadow: 0 0 0 0.2rem rgba(20, 184, 166, 0.25);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(20, 184, 166, 0.4);
+}
+
+@media (max-width: 768px) {
+  .supervisor-profile-page {
+    margin-left: 0;
+    padding: 10px;
+  }
+  
+  .page-header {
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+}

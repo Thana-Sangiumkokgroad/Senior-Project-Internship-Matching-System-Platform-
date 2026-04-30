@@ -1,0 +1,449 @@
+/* ═════════════════════════════════════════════
+   FA CREATE ACCOUNT — matches FA dashboard
+   ═════════════════════════════════════════════ */
+
+.faca-page {
+  margin-left: 260px;
+  min-height: 100vh;
+  background: #f0f4f8;
+  padding-bottom: 60px;
+}
+
+/* ── Hero ── */
+.faca-hero {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0e7490 55%, #2dd4bf 100%);
+  padding: 40px 40px 32px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.faca-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(20,184,166,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.faca-hero-inner {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 1.1rem;
+}
+.faca-hero-icon {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.12);
+  border: 2px solid rgba(255,255,255,0.25); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; color: #fff; flex-shrink: 0;
+}
+.faca-hero-title { font-size: 1.7rem; font-weight: 800; color: #fff; margin: 0 0 4px; }
+.faca-hero-sub   { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; }
+
+/* ── Content ── */
+.faca-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 40px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Form Card ── */
+.faca-form-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+}
+.faca-form-head {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+.faca-form-head-title {
+  font-size: 0.82rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: #475569; margin: 0;
+}
+.faca-form-body { padding: 1.5rem; }
+
+/* ── Section label ── */
+.faca-section-label {
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: #6b7280; margin-bottom: 0.75rem;
+  padding-bottom: 4px; border-bottom: 1px solid #f1f5f9;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.faca-section-badge {
+  padding: 2px 8px; border-radius: 50px;
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: none; letter-spacing: 0;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+
+/* ── Type Grid ── */
+.faca-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+.faca-type-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 0.9rem 0.5rem;
+  border: 1.5px solid #e2e8f0; border-radius: 12px;
+  background: #fafbfe; cursor: pointer;
+  font-size: 0.8rem; color: #475569; font-weight: 600;
+  transition: all 0.15s;
+}
+.faca-type-btn:hover { border-color: #a5b4c8; background: #f0f4f8; }
+.faca-type-btn i { font-size: 1.3rem; }
+.faca-type-selected {
+  border-color: var(--type-color, #0e7490) !important;
+  background: color-mix(in srgb, var(--type-color, #0e7490) 8%, white) !important;
+  color: var(--type-color, #0e7490) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--type-color, #0e7490) 15%, transparent);
+}
+
+/* ── Form rows ── */
+.faca-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 0.9rem;
+}
+.faca-form-group { display: flex; flex-direction: column; gap: 0.28rem; }
+.faca-col-full { grid-column: 1 / -1; }
+.faca-form-group label { font-size: 0.8rem; font-weight: 700; color: #374151; }
+.faca-form-group .form-control,
+.faca-form-group .form-select {
+  border-radius: 8px; border: 1.5px solid #e2e8f0;
+  font-size: 0.86rem; padding: 0.5rem 0.75rem;
+  transition: border-color 0.18s;
+}
+.faca-form-group .form-control:focus,
+.faca-form-group .form-select:focus {
+  border-color: #0e7490;
+  box-shadow: 0 0 0 3px rgba(14,116,144,0.1);
+}
+
+/* ── Password ── */
+.faca-pass-wrap { position: relative; }
+.faca-pass-wrap .form-control { padding-right: 2.5rem; }
+.faca-pass-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: #6b7280; cursor: pointer;
+  padding: 0 4px; font-size: 0.9rem;
+}
+.faca-pass-toggle:hover { color: #0e7490; }
+
+/* ── Info note ── */
+.faca-info-note {
+  background: #fffbeb; border: 1px solid #fbbf24;
+  border-radius: 8px; padding: 0.55rem 0.9rem;
+  font-size: 0.8rem; color: #92400e; margin-top: 0.25rem;
+}
+
+/* ── Submit ── */
+.faca-form-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+.faca-submit-btn {
+  width: 100%;
+  padding: 0.7rem;
+  font-weight: 700;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  background: linear-gradient(135deg, #1e3a5f, #0e7490);
+  border: none; color: #fff;
+  cursor: pointer; transition: opacity 0.18s;
+}
+.faca-submit-btn:hover:not(:disabled) { opacity: 0.9; }
+.faca-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* ── Sidebar ── */
+.faca-sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.faca-side-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+}
+.faca-side-head {
+  padding: 0.75rem 1.1rem;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+  font-size: 0.72rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.07em; color: #475569;
+  display: flex; align-items: center; gap: 6px;
+}
+.faca-side-body { padding: 1rem 1.1rem; }
+
+.faca-recent-empty { font-size: 0.8rem; color: #c0ccda; text-align: center; padding: 0.75rem 0; }
+.faca-recent-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.faca-recent-item { display: flex; align-items: center; gap: 0.65rem; }
+.faca-recent-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
+}
+.faca-recent-email { font-size: 0.8rem; font-weight: 700; color: #0f172a; word-break: break-all; }
+.faca-recent-meta  { font-size: 0.72rem; color: #6b7280; }
+
+.faca-tips-list { margin: 0; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.faca-tips-list li { font-size: 0.8rem; color: #475569; }
+
+
+.faca-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ── Header ── */
+.faca-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+.faca-back {
+  background: #fff;
+  border: 1.5px solid #dce3ee;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: #4f7ef8;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+.faca-back:hover { background: #eef2fc; }
+.faca-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a2340;
+  margin: 0 0 0.25rem;
+}
+.faca-subtitle {
+  color: #6b7fa3;
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+/* ── Layout ── */
+.faca-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── Form Card ── */
+.faca-form-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(31,65,148,0.08);
+  border: 1.5px solid #e8edf5;
+}
+
+.faca-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9baec4;
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.faca-section-badge {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Type Selector ── */
+.faca-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.faca-type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.85rem 0.5rem;
+  border: 1.5px solid #dce3ee;
+  border-radius: 12px;
+  background: #fafbfe;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #5a6a85;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.faca-type-btn:hover { border-color: #b4c4e8; background: #f0f4ff; }
+.faca-type-btn i { font-size: 1.25rem; }
+.faca-type-selected {
+  border-color: var(--type-color, #4f7ef8) !important;
+  background: color-mix(in srgb, var(--type-color, #4f7ef8) 8%, white) !important;
+  color: var(--type-color, #4f7ef8) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--type-color, #4f7ef8) 15%, transparent);
+}
+
+/* ── Form Rows ── */
+.faca-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+.faca-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.faca-col-full { grid-column: 1 / -1; }
+.faca-form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #3d4f6e;
+}
+.faca-form-group .form-control,
+.faca-form-group .form-select {
+  border-radius: 9px;
+  border: 1.5px solid #dce3ee;
+  font-size: 0.88rem;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.2s;
+}
+.faca-form-group .form-control:focus,
+.faca-form-group .form-select:focus {
+  border-color: #4f7ef8;
+  box-shadow: 0 0 0 3px rgba(79,126,248,0.1);
+}
+
+/* ── Password input ── */
+.faca-pass-wrap {
+  position: relative;
+}
+.faca-pass-wrap .form-control { padding-right: 2.5rem; }
+.faca-pass-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9baec4;
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 0.9rem;
+}
+.faca-pass-toggle:hover { color: #4f7ef8; }
+
+/* ── Info note ── */
+.faca-info-note {
+  background: #fef9ec;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.82rem;
+  color: #92400e;
+  margin-top: 0.25rem;
+}
+
+/* ── Submit ── */
+.faca-submit-btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.7rem;
+  font-weight: 600;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+/* ── Sidebar ── */
+.faca-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.faca-recent-card,
+.faca-tips-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(31,65,148,0.07);
+  border: 1.5px solid #e8edf5;
+}
+
+.faca-recent-title,
+.faca-tips-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9baec4;
+  margin-bottom: 0.85rem;
+}
+
+.faca-recent-empty {
+  font-size: 0.82rem;
+  color: #b0becf;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.faca-recent-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.faca-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.faca-recent-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.faca-recent-email {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a2340;
+  word-break: break-all;
+}
+.faca-recent-meta {
+  font-size: 0.75rem;
+  color: #9baec4;
+}
+
+.faca-tips-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.faca-tips-list li { font-size: 0.82rem; color: #5a6a85; }

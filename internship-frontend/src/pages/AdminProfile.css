@@ -1,0 +1,52 @@
+.admin-profile-page {
+  margin-left: 250px;
+  min-height: 100vh;
+  background: linear-gradient(140deg, #f0f4f8 0%, #eaf2f8 100%);
+  padding-bottom: 40px;
+}
+
+.admin-profile-page .container {
+  padding-top: 24px;
+}
+
+.ap-card {
+  border: 1px solid #dbe3ec;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+.ap-header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0e7490 55%, #2dd4bf 100%) !important;
+  border-bottom: none;
+}
+
+.admin-profile-page .form-control,
+.admin-profile-page .form-select {
+  border: 1.5px solid #dbe3ec;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.admin-profile-page .form-control:focus,
+.admin-profile-page .form-select:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.14);
+}
+
+.admin-profile-page .btn-primary {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.admin-profile-page .btn-primary:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .admin-profile-page {
+    margin-left: 0;
+  }
+}

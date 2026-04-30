@@ -1,0 +1,312 @@
+/* App.css - Global Application Styles */
+
+/* ========================================
+   CSS Variables - Modern Teal Theme
+======================================== */
+:root {
+  /* Main Colors */
+  --primary-color: #14B8A6;
+  --primary-light: #2DD4BF;
+  --primary-dark: #0D9488;
+  
+  --secondary-color: #7C3AED;
+  --accent-color: #FF6B6B;
+  --highlight-color: #FCD34D;
+  
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-on-dark: #ffffff;
+  
+  --background-light: #F8FAFC;
+  --background-white: #ffffff;
+  --border-color: #E2E8F0;
+  
+  /* Status Colors */
+  --success-color: #10B981;
+  --warning-color: #F59E0B;
+  --danger-color: #EF4444;
+  --info-color: #14B8A6;
+}
+
+/* Base Styles */
+* {
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+/* Navbar */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Cards */
+.card {
+  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.08);
+  border: none;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--text-on-dark);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 12px 12px 0 0;
+}
+
+.card-header h1, .card-header h2, .card-header h3, 
+.card-header h4, .card-header h5, .card-header h6,
+.card-header p, .card-header span {
+  color: var(--text-on-dark);
+}
+
+/* Buttons */
+.btn {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--text-on-dark);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--text-on-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--text-on-dark);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #6D28D9;
+  border-color: #6D28D9;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+  background-color: #DC2626;
+  border-color: #DC2626;
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+/* Badges */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  padding: 0.35em 0.65em;
+}
+
+.badge.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.badge.bg-warning {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.badge.bg-success {
+  background-color: var(--success-color);
+}
+
+.badge.bg-danger {
+  background-color: var(--danger-color);
+}
+
+/* Forms */
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 0.2rem rgba(20, 184, 166, 0.25);
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+  opacity: 0.8;
+}
+
+/* List Groups */
+.list-group-item {
+  border-left: 4px solid var(--primary-color);
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: rgba(20, 184, 166, 0.05);
+  border-left-color: var(--accent-color);
+}
+
+/* Progress Bars */
+.progress-bar {
+  background-color: var(--primary-color);
+}
+
+/* Alerts */
+.alert-info {
+  background-color: rgba(20, 184, 166, 0.1);
+  border-color: var(--info-color);
+  color: var(--text-primary);
+}
+
+/* Spinners */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.spinner-border.text-primary {
+  color: var(--primary-color);
+}
+
+/* Tables */
+.table {
+  border-color: var(--border-color);
+}
+
+.table thead th {
+  background-color: rgba(20, 184, 166, 0.1);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(20, 184, 166, 0.05);
+}
+
+/* Navigation Tabs */
+.nav-tabs .nav-link.active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--primary-color);
+}
+
+/* Modal */
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.modal-header * {
+  color: white;
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-secondary, .text-muted {
+  color: var(--text-secondary);
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+  color: var(--text-on-dark);
+}
+
+/* Jumbotron */
+.jumbotron {
+  background-color: var(--background-white);
+  padding: 3rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* White text on gradients */
+[style*="background: linear-gradient"] h1,
+[style*="background: linear-gradient"] h2,
+[style*="background: linear-gradient"] h3,
+[style*="background: linear-gradient"] h4,
+[style*="background: linear-gradient"] h5,
+[style*="background: linear-gradient"] h6,
+[style*="background: linear-gradient"] p,
+[style*="background: linear-gradient"] span,
+[class*="header"] h1,
+[class*="header"] h2,
+[class*="header"] h3,
+[class*="header"] p {
+  color: white;
+}
+
+.welcome-section,
+[class*="-header"],
+[class*="gradient"] {
+  color: white;
+}
+
+.card-header *,
+.welcome-section *,
+[class*="-header"] *,
+[class*="gradient"] * {
+  color: white;
+}

@@ -1,0 +1,687 @@
+﻿/* 
+   InterestFormResult    Full Redesign
+   Theme: teal gradient hero + clean white cards
+ */
+
+/*  Page shell  */
+.ir-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* ── REDO MODAL ─────────────────────────────────────── */
+.ir-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.ir-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+  animation: ir-modal-in 0.2s ease;
+}
+@keyframes ir-modal-in {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.ir-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  color: white;
+}
+.ir-modal-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+.ir-modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.ir-modal-sub {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+.ir-modal-close {
+  margin-left: auto;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.ir-modal-close:hover { background: rgba(255,255,255,0.25); }
+.ir-modal-body {
+  padding: 24px;
+  color: #475569;
+  line-height: 1.7;
+}
+.ir-modal-body p { margin: 0 0 12px; }
+.ir-modal-note {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: #0369a1;
+  margin: 0 !important;
+}
+.ir-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+.ir-modal-btn-cancel {
+  padding: 10px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ir-modal-btn-cancel:hover { border-color: #94a3b8; color: #334155; }
+.ir-modal-btn-confirm {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center;
+  transition: all 0.15s;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.35);
+}
+.ir-modal-btn-confirm:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(13,148,136,0.45); }
+
+/*  Loading  */
+.ir-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  color: #475569;
+  font-size: 1.1rem;
+}
+.ir-loading-spinner {
+  width: 56px; height: 56px;
+  border: 6px solid #e2e8f0;
+  border-top-color: #14b8a6;
+  border-radius: 50%;
+  animation: ir-spin 0.9s linear infinite;
+}
+@keyframes ir-spin { to { transform: rotate(360deg); } }
+
+/*  Error card  */
+.ir-error-card {
+  max-width: 480px;
+  margin: 80px auto;
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.ir-error-icon { font-size: 4rem; margin-bottom: 16px; }
+.ir-error-card h3 { font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+.ir-error-card p  { color: #475569; line-height: 1.6; }
+.ir-error-actions { display: flex; gap: 12px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+
+/* 
+   HERO — mirrors StudentDashboard .sd-hero exactly
+ */
+.ir-sd-hero {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0e7490 55%, #2dd4bf 100%);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(14,116,144,0.25);
+  margin-bottom: 28px;
+}
+.ir-sd-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 250px; height: 250px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.ir-sd-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 30%;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.ir-sd-hero-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 0;
+}
+.ir-sd-hero-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; font-weight: 700; color: #0f172a;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,0.6);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.92);
+}
+.ir-sd-hero-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ir-sd-hero-info { min-width: 0; }
+.ir-sd-hero-greeting {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.02em;
+}
+.ir-sd-hero-name {
+  font-size: 1.75rem; font-weight: 800; color: #fff;
+  margin: 0 0 0.35rem; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ir-sd-hero-subtitle {
+  font-size: 0.85rem; color: rgba(255,255,255,0.85); margin: 0 0 0.75rem;
+}
+.ir-sd-hero-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.ir-sd-hero-badge {
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.3rem 0.75rem; border-radius: 99px;
+  display: inline-flex; align-items: center;
+}
+.ir-sd-hero-actions {
+  display: flex; flex-direction: column; gap: 0.6rem; flex-shrink: 0;
+}
+.ir-sd-hero-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.25rem; border-radius: 10px;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; border: none;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.ir-sd-btn-primary {
+  background: #14b8a6; color: white;
+  box-shadow: 0 2px 8px rgba(20,184,166,0.4);
+}
+.ir-sd-btn-primary:hover {
+  background: #0d9488; color: white;
+  transform: translateY(-1px); box-shadow: 0 4px 14px rgba(20,184,166,0.5);
+}
+.ir-sd-btn-secondary {
+  background: rgba(255,255,255,0.12); color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(8px);
+}
+.ir-sd-btn-secondary:hover {
+  background: rgba(255,255,255,0.22); color: white; transform: translateY(-1px);
+}
+
+/* keep old badge classes for hero badges */
+.ir-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.82rem;
+  margin-left: 12px;
+  vertical-align: middle;
+  backdrop-filter: blur(4px);
+}
+.badge-green { background: rgba(16,185,129,0.25); color: #d1fae5; border: 1px solid rgba(16,185,129,0.3); }
+.badge-blue  { background: rgba(59,130,246,0.25);  color: #dbeafe; border: 1px solid rgba(59,130,246,0.3); }
+.badge-red   { background: rgba(239,68,68,0.25);   color: #fee2e2; border: 1px solid rgba(239,68,68,0.3); }
+
+/* 
+   CONTAINER
+ */
+.ir-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* 
+   BUTTONS
+ */
+.ir-btn-primary {
+  display: inline-flex; align-items: center;
+  background: #0d9488; color: white;
+  border: none; border-radius: 10px;
+  padding: 11px 24px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.ir-btn-primary:hover { background: #0f766e; transform: translateY(-1px); }
+
+.ir-btn-ghost {
+  display: inline-flex; align-items: center;
+  background: transparent; color: #475569;
+  border: 2px solid #e2e8f0; border-radius: 10px;
+  padding: 9px 22px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+}
+.ir-btn-ghost:hover { border-color: #0d9488; color: #0d9488; }
+
+/* ir-btn-white and ir-btn-outline-white removed (old hero buttons, replaced by ir-sd-hero-btn) */
+
+.ir-btn-link {
+  background: none; border: none; color: #0d9488;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center;
+  padding: 4px 8px; border-radius: 6px;
+  transition: background 0.15s;
+}
+.ir-btn-link:hover { background: #f0fdf4; }
+
+/* 
+   ALGORITHM EXPLAINER CARD
+ */
+.ir-algo-card {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.ir-algo-toggle {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  background: none; border: none; cursor: pointer;
+  padding: 20px 24px;
+  font-size: 1rem; color: #1e293b;
+  transition: background 0.15s;
+}
+.ir-algo-toggle:hover { background: #f8fafc; }
+.ir-algo-toggle-left { display: flex; align-items: center; gap: 14px; }
+.ir-algo-icon { font-size: 1.6rem; }
+.ir-algo-sub { color: #6b7280; font-weight: 400; }
+.ir-algo-chevron { color: #475569; font-size: 1.1rem; transition: transform 0.2s; }
+
+.ir-algo-body {
+  padding: 0 24px 28px;
+  border-top: 1px solid #f1f5f9;
+}
+.ir-algo-intro {
+  color: #475569; line-height: 1.7;
+  margin: 20px 0 24px;
+}
+
+/* Weight bar */
+.ir-weight-bar {
+  display: flex; border-radius: 10px; overflow: hidden; height: 36px;
+  margin-bottom: 12px; gap: 3px;
+}
+.ir-weight-segment {
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 0.82rem; font-weight: 700;
+  border-radius: 6px;
+  transition: opacity 0.2s;
+}
+.ir-weight-segment:hover { opacity: 0.85; }
+
+.ir-weight-legend {
+  display: flex; flex-wrap: wrap; gap: 12px 20px;
+  margin-bottom: 28px;
+}
+.ir-weight-legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.85rem; color: #475569; font-weight: 500;
+}
+.ir-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Step cards grid */
+.ir-algo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.ir-algo-step {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid;
+  overflow: hidden;
+  background: white;
+}
+.ir-algo-step-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 14px 12px;
+}
+.ir-algo-step-header i { font-size: 1.4rem; }
+.ir-algo-step-name { font-weight: 700; font-size: 0.9rem; line-height: 1.2; }
+.ir-algo-step-max  { font-size: 0.8rem; color: #475569; margin-top: 2px; }
+
+.ir-algo-rules {
+  list-style: none; padding: 10px 14px 14px; margin: 0;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.ir-algo-rules li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 0.82rem; color: #475569; line-height: 1.4;
+}
+.ir-rule-score {
+  display: inline-block;
+  border-radius: 6px; padding: 2px 7px;
+  font-size: 0.77rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+}
+
+.ir-algo-note {
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 10px; padding: 14px 18px;
+  font-size: 0.87rem; color: #475569; line-height: 1.6;
+}
+
+/* 
+   PROFILE CARD
+ */
+.ir-profile-card {
+  background: white;
+  border-radius: 16px; margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden; border: 1px solid #e2e8f0;
+}
+.ir-profile-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+}
+.ir-profile-title {
+  font-size: 1rem; font-weight: 700; color: white;
+}
+.ir-profile-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Chip groups */
+.ir-profile-chips-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ir-chip-group { display: flex; align-items: center; gap: 7px; }
+.ir-chip-label {
+  font-size: 0.78rem; font-weight: 600; color: #94a3b8; text-transform: uppercase;
+  letter-spacing: 0.5px; white-space: nowrap;
+}
+.ir-chip {
+  display: inline-block; border-radius: 20px; padding: 4px 14px;
+  font-size: 0.85rem; font-weight: 600;
+}
+.ir-chip-purple { background: #eef2ff; color: #6366f1; }
+.ir-chip-amber  { background: #fef3c7; color: #d97706; }
+.ir-chip-blue   { background: #e0f9ff; color: #0284c7; }
+.ir-chip-dark   { background: #1e293b; color: #e2e8f0; }
+
+.ir-skills-row { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.ir-skill-pill {
+  background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+  border-radius: 20px; padding: 3px 12px;
+  font-size: 0.82rem; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.ir-lang-pct { color: #6b7280; font-size: 0.75rem; }
+.ir-industry-pill {
+  background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
+  border-radius: 20px; padding: 3px 12px;
+  font-size: 0.82rem; font-weight: 500;
+}
+
+/* GitHub inside profile */
+.ir-github-panel {
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 12px; padding: 18px 20px;
+  margin-top: 4px;
+}
+.ir-github-panel-title {
+  font-size: 0.9rem; font-weight: 700; color: #1e293b;
+  margin-bottom: 14px; display: flex; align-items: center;
+}
+.ir-github-visit-btn {
+  margin-left: auto;
+  display: inline-flex; align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.8rem; font-weight: 600;
+  color: #0d9488;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.ir-github-visit-btn:hover {
+  background: #0d9488; color: white; border-color: #0d9488;
+}
+
+/* GitHub chip as link */
+.ir-chip-link {
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.ir-chip-link:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+.ir-github-loading { display: flex; align-items: center; gap: 10px; color: #475569; font-size: 0.9rem; }
+.ir-spin { width: 18px; height: 18px; border: 3px solid #e2e8f0; border-top-color: #0d9488; border-radius: 50%; animation: ir-spin 0.8s linear infinite; }
+.ir-github-content { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; }
+.ir-github-score-block { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ir-score-ring {
+  width: 90px; height: 90px; border-radius: 50%;
+  border: 5px solid var(--ring-color, #0d9488);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.ir-ring-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.ir-ring-unit  { font-size: 0.72rem; color: #6b7280; text-transform: uppercase; }
+.ir-rating-badge {
+  color: white; border-radius: 20px; padding: 3px 12px;
+  font-size: 0.8rem; font-weight: 700;
+}
+.ir-github-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+.ir-stat-box {
+  background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+  padding: 10px 14px; text-align: center; min-width: 80px;
+  transition: transform 0.15s;
+}
+.ir-stat-box:hover { transform: translateY(-2px); }
+.ir-stat-box i   { font-size: 1.2rem; display: block; margin-bottom: 4px; }
+.ir-stat-val     { font-size: 1.2rem; font-weight: 700; color: #1e293b; }
+.ir-stat-lbl     { font-size: 0.7rem; color: #6b7280; text-transform: uppercase; margin-top: 2px; }
+.ir-top-langs    { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; width: 100%; }
+.ir-github-warn  { color: #92400e; font-size: 0.9rem; display: flex; align-items: center; }
+
+/* 
+   RESULTS SECTION
+ */
+.ir-section-title {
+  font-size: 1.4rem; font-weight: 800; color: #1e293b;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 24px;
+}
+
+.ir-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 20px;
+}
+
+/*  Match card  */
+.ir-match-card {
+  background: white; border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  padding: 24px 24px 20px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+.ir-match-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+}
+
+/* Rank ribbon */
+.ir-rank-ribbon {
+  position: absolute; top: 0; left: 0;
+  width: 44px; height: 44px; border-radius: 0 0 14px 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 800; font-size: 0.85rem;
+}
+
+/* Card top */
+.ir-card-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px;
+  padding-left: 34px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.ir-card-info { flex: 1; }
+.ir-card-title {
+  font-size: 1.15rem; font-weight: 700; color: #1e293b;
+  margin: 0 0 4px; line-height: 1.3;
+}
+.ir-card-company { color: #475569; font-size: 0.88rem; margin: 0 0 10px; }
+.ir-card-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 14px;
+  margin-bottom: 10px;
+}
+.ir-card-meta span { font-size: 0.82rem; color: #475569; display: flex; align-items: center; }
+
+/* Fit badges */
+.ir-fit-badge {
+  display: inline-block; border-radius: 20px;
+  padding: 4px 12px; font-size: 0.8rem; font-weight: 700;
+}
+.fit-excellent { background: #d1fae5; color: #065f46; }
+.fit-good      { background: #dbeafe; color: #1e40af; }
+.fit-moderate  { background: #fef3c7; color: #92400e; }
+.fit-growth    { background: #fce7f3; color: #9d174d; }
+
+/* Donut */
+.ir-donut-wrap { flex-shrink: 0; width: 90px; height: 90px; }
+.ir-donut { width: 100%; height: 100%; }
+
+/* Recommendation */
+.ir-recommendation {
+  background: #fffbeb; border-left: 3px solid #f59e0b;
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+  font-size: 0.88rem; color: #78350f; line-height: 1.55;
+  margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+
+/* Breakdown bars */
+.ir-breakdown {
+  background: #f8fafc; border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 9px;
+}
+.ir-bar-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 64px;
+  gap: 10px; align-items: center;
+}
+.ir-bar-label {
+  font-size: 0.8rem; font-weight: 600; color: #475569;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center;
+}
+.ir-no-profile {
+  color: #6b7280; font-weight: 400; font-size: 0.72rem; margin-left: 4px;
+}
+.ir-bar-track {
+  height: 10px; background: #e2e8f0; border-radius: 5px;
+  overflow: hidden;
+}
+.ir-bar-fill {
+  height: 100%; border-radius: 5px;
+  transition: width 0.5s ease;
+}
+.ir-bar-score {
+  font-size: 0.82rem; font-weight: 700; text-align: right;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+}
+.ir-bar-sub { font-size: 0.7rem; color: #6b7280; font-weight: 400; white-space: nowrap; }
+
+/* CTA row */
+.ir-card-cta {
+  display: flex; align-items: center; justify-content: flex-end;
+  font-size: 0.88rem; font-weight: 600; color: #0d9488;
+  padding-top: 6px; gap: 4px;
+  transition: gap 0.2s;
+}
+.ir-match-card:hover .ir-card-cta { gap: 8px; }
+
+/*  Empty state  */
+.ir-empty {
+  text-align: center; background: white;
+  border-radius: 16px; padding: 56px 32px;
+  border: 1px solid #e2e8f0;
+}
+.ir-empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.ir-empty p    { color: #475569; margin-bottom: 24px; line-height: 1.6; }
+
+/*  Bottom actions  */
+.ir-bottom-actions {
+  display: flex; gap: 12px; justify-content: center;
+  margin-top: 36px; flex-wrap: wrap;
+}
+
+/* 
+   RESPONSIVE
+ */
+@media (max-width: 768px) {
+  .ir-hero-title { font-size: 1.6rem; }
+  .ir-sd-hero { flex-direction: column; align-items: flex-start; padding: 1.5rem; }
+  .ir-sd-hero-actions { flex-direction: row; }
+  .ir-sd-hero-name { font-size: 1.3rem; }
+  .ir-cards-grid { grid-template-columns: 1fr; }
+  .ir-card-top   { flex-direction: column; padding-left: 34px; }
+  .ir-donut-wrap { align-self: flex-start; }
+  .ir-bar-row    { grid-template-columns: 90px 1fr 54px; }
+  .ir-algo-grid  { grid-template-columns: 1fr 1fr; }
+  .ir-github-content { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .ir-algo-grid            { grid-template-columns: 1fr; }
+  .ir-hero                 { padding: 36px 18px; }
+  .ir-container            { padding: 24px 14px 48px; }
+  .ir-match-card           { padding: 20px 16px 16px; }
+}
