@@ -20,14 +20,12 @@ const facultyAdminRoutes = require('./routes/faculty-admin');
 const app = express();
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow requests with no origin (mobile apps, curl, Render health checks)
     if (!origin) return callback(null, true);
     // Allow localhost
     if (origin.startsWith('http://localhost')) return callback(null, true);
-    // Allow all Vercel deployments for this project
-    if (/^https:\/\/senior-project-internship-matching-system-platform.*\.vercel\.app$/.test(origin)) {
-      return callback(null, true);
-    }
+    // Allow all Vercel deployments (any subdomain)
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
