@@ -39,7 +39,7 @@ router.get('/inbox', authMiddleware, async (req, res) => {
         COALESCE(
           s.name,
           c.company_name,
-          sup.name,
+          (SELECT sup.name FROM supervisors sup WHERE sup.user_id = u.id LIMIT 1),
           u.email
         ) AS sender_name,
         s.profile_image AS sender_photo,
@@ -48,7 +48,6 @@ router.get('/inbox', authMiddleware, async (req, res) => {
        JOIN users u ON m.sender_id = u.id
        LEFT JOIN students s ON u.id = s.user_id AND u.user_type = 'student'
        LEFT JOIN companies c ON u.id = c.user_id AND u.user_type = 'company'
-       LEFT JOIN supervisors sup ON u.id = sup.user_id AND u.user_type = 'supervisor'
        WHERE m.receiver_id = $1
        ORDER BY m.sent_at DESC`,
       [req.user.id]
@@ -76,14 +75,13 @@ router.get('/sent', authMiddleware, async (req, res) => {
         COALESCE(
           s.name,
           c.company_name,
-          sup.name,
+          (SELECT sup.name FROM supervisors sup WHERE sup.user_id = u.id LIMIT 1),
           u.email
         ) AS recipient_name
        FROM messages m
        JOIN users u ON m.receiver_id = u.id
        LEFT JOIN students s ON u.id = s.user_id AND u.user_type = 'student'
        LEFT JOIN companies c ON u.id = c.user_id AND u.user_type = 'company'
-       LEFT JOIN supervisors sup ON u.id = sup.user_id AND u.user_type = 'supervisor'
        WHERE m.sender_id = $1
        ORDER BY m.sent_at DESC`,
       [req.user.id]

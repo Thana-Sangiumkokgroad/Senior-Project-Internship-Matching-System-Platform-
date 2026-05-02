@@ -100,6 +100,23 @@ async function runAutoMigrations() {
   } catch (err) {
     console.error('⚠️  Auto-migration warning (applications favourite):', err.message);
   }
+
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS supervisors (
+        id              SERIAL PRIMARY KEY,
+        user_id         INTEGER UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+        name            VARCHAR(255),
+        contact_info    TEXT,
+        faculty_department VARCHAR(255),
+        profile_photo   BYTEA,
+        created_at      TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    console.log('✅ Supervisors table migration OK');
+  } catch (err) {
+    console.error('⚠️  Auto-migration warning (supervisors):', err.message);
+  }
 }
 
 app.listen(5000, async () => {
