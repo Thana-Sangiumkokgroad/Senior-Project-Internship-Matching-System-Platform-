@@ -4,7 +4,8 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'https://senior-project-internship-matching.onrender.com/api',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 15000, // 15s — shows error instead of hanging indefinitely (important for Render cold starts)
 });
 
 // Add token to requests automatically
