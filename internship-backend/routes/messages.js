@@ -71,9 +71,19 @@ router.get('/inbox', authMiddleware, async (req, res) => {
 router.get('/sent', authMiddleware, async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT m.*, u.email as recipient_email
+      `SELECT m.*,
+        u.email AS recipient_email,
+        COALESCE(
+          s.name,
+          c.company_name,
+          sup.name,
+          u.email
+        ) AS recipient_name
        FROM messages m
        JOIN users u ON m.receiver_id = u.id
+       LEFT JOIN students s ON u.id = s.user_id AND u.user_type = 'student'
+       LEFT JOIN companies c ON u.id = c.user_id AND u.user_type = 'company'
+       LEFT JOIN supervisors sup ON u.id = sup.user_id AND u.user_type = 'supervisor'
        WHERE m.sender_id = $1
        ORDER BY m.sent_at DESC`,
       [req.user.id]

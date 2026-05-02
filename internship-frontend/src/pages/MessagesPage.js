@@ -136,7 +136,7 @@ const MessagesPage = () => {
         if (!convMap[otherId] || new Date(ts) > new Date(convMap[otherId].ts)) {
           convMap[otherId] = {
             userId: otherId,
-            name: otherUser?.name || msg.sender_email || `User ${otherId}`,
+            name: otherUser?.name || msg.sender_name || msg.sender_email || `User ${otherId}`,
             email: msg.sender_email || otherUser?.email || '',
             photo: otherUser?.photo || null,
             role: otherUser?.role || null,
@@ -158,7 +158,7 @@ const MessagesPage = () => {
         if (!convMap[otherId] || new Date(ts) > new Date(convMap[otherId].ts)) {
           convMap[otherId] = {
             userId: otherId,
-            name: otherUser?.name || msg.recipient_email || `User ${otherId}`,
+            name: otherUser?.name || msg.recipient_name || msg.recipient_email || `User ${otherId}`,
             email: msg.recipient_email || otherUser?.email || '',
             photo: otherUser?.photo || null,
             role: otherUser?.role || null,

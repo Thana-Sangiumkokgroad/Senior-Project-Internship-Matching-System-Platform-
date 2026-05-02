@@ -5,12 +5,12 @@ import api from '../services/api';
 import './InterestForm.css';
 import {
   POSITION_TYPES,
-  POSITION_GROUPS,
   PROGRAMMING_LANGUAGES,
   FRAMEWORKS_AND_TOOLS,
   INDUSTRIES,
   WORK_MODES,
 } from '../constants/matchingOptions';
+import { calculateMatchesForInternships } from '../services/matchingEngine';
 
 const SearchablePillGroup = ({ field, options, newNames, pillSearch, setPillSearch, formData, onToggle }) => {
   const query = (pillSearch[field] || '').trim().toLowerCase();
@@ -202,191 +202,13 @@ const InterestForm = () => {
         return [];
       }
 
-      // Build a Set of GitHub languages (lowercase) for fast lookup
-      const githubLangSet = new Set(
-        (githubData?.topLanguages || []).map(l => l.language.toLowerCase())
-      );
+      const rawMatches = calculateMatchesForInternships(internships, studentData, githubData);
 
-      // Language aliases – map common skill names to GitHub language names
-      const LANG_ALIASES = {
-        'javascript': ['javascript', 'js', 'node.js', 'nodejs'],
-        'typescript': ['typescript', 'ts'],
-        'python': ['python', 'py'],
-        'java': ['java'],
-        'c++': ['c++', 'cpp'],
-        'c#': ['c#', 'csharp'],
-        'html': ['html', 'html/css'],
-        'css': ['css', 'scss', 'sass'],
-        'php': ['php'],
-        'ruby': ['ruby'],
-        'go': ['go', 'golang'],
-        'swift': ['swift'],
-        'kotlin': ['kotlin'],
-        'dart': ['dart'],
-        'r': ['r'],
-        'rust': ['rust'],
-        'scala': ['scala'],
-      };
-
-      const normalizeToGithubLang = (skill) => {
-        const s = skill.toLowerCase();
-        for (const [canonical, aliases] of Object.entries(LANG_ALIASES)) {
-          if (aliases.includes(s)) return canonical;
-        }
-        return s;
-      };
-
-      // Parse student skills into a Set for O(1) lookup
-      const studentLangs = (studentData.programming_languages || '').split(',').map(s => s.trim()).filter(Boolean);
-      const studentFrameworks = (studentData.technical_skills || '').split(',').map(s => s.trim()).filter(Boolean);
-      const studentSkillSet = new Set([...studentLangs, ...studentFrameworks]);
-
-      const studentPositions = (studentData.preferred_position || '')
-        .split(',').map(s => s.trim()).filter(Boolean);
-      const studentWorkMode = studentData.preferred_work_env;
-      const studentIndustries = (studentData.industry_interest || '')
-        .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-
-      const matches = internships.map(internship => {
-        let totalScore = 0;
-        const breakdown = {};
-
-        // ── 1. Position Type Match (30 pts) ──────────────────────────────
-        const internshipPosition = internship.position_type || '';
-        let positionScore = 0;
-        if (studentPositions.length > 0 && internshipPosition) {
-          if (studentPositions.includes(internshipPosition)) {
-            positionScore = 30; // Exact match
-          } else if (
-            studentPositions.some(sp =>
-              POSITION_GROUPS[sp] &&
-              POSITION_GROUPS[sp] === POSITION_GROUPS[internshipPosition]
-            )
-          ) {
-            positionScore = 18; // Same group (e.g. frontend ↔ fullstack)
-          } else {
-            positionScore = 0;
-          }
-        } else {
-          positionScore = 10; // Position not yet structured
-        }
-        totalScore += positionScore;
-        breakdown.position_match = positionScore;
-
-        // ── 2. Skills Match via checkboxes (30 pts) ───────────────────────
-        const requiredSkills = (internship.required_skills || '')
-          .split(',').map(s => s.trim()).filter(Boolean);
-        let skillScore = 0;
-        if (requiredSkills.length > 0) {
-          if (studentSkillSet.size > 0) {
-            const matched = requiredSkills.filter(skill => studentSkillSet.has(skill));
-            skillScore = Math.round((matched.length / requiredSkills.length) * 30);
-          }
-        } else {
-          skillScore = 15; // No requirements posted – neutral base
-        }
-        totalScore += skillScore;
-        breakdown.skills_match = skillScore;
-
-        // ── 3. GitHub Language + Activity (20 pts) ────────────────────────
-        //   Language overlap vs required_skills:    0–15 pts
-        //   Overall GitHub activity (totalScore):   0– 5 pts
-        let githubScore = 0;
-        if (githubData) {
-          // 3a. Language match (15 pts)
-          let langMatchScore = 0;
-          if (requiredSkills.length > 0) {
-            const langMatched = requiredSkills.filter(skill => {
-              const normalized = normalizeToGithubLang(skill);
-              // Direct match or contained-in check
-              return (
-                githubLangSet.has(normalized) ||
-                [...githubLangSet].some(gl => gl.includes(normalized) || normalized.includes(gl))
-              );
-            });
-            langMatchScore = Math.round((langMatched.length / requiredSkills.length) * 15);
-          } else {
-            langMatchScore = 7; // No requirements – neutral
-          }
-          // 3b. Activity score (5 pts) – scales from GitHub totalScore (0–100)
-          const activityScore = Math.round((githubData.totalScore / 100) * 5);
-          githubScore = langMatchScore + activityScore;
-          breakdown.github_language_match = langMatchScore;
-          breakdown.github_activity = activityScore;
-        } else {
-          // No GitHub provided – give partial neutral credit
-          githubScore = 7;
-          breakdown.github_language_match = 5;
-          breakdown.github_activity = 2;
-        }
-        breakdown.github_total = githubScore;
-        totalScore += githubScore;
-
-        // ── 4. Work Mode Match (10 pts) ───────────────────────────────────
-        const internshipMode = (internship.work_mode || '').toLowerCase();
-        let workModeScore = 0;
-        if (studentWorkMode === 'flexible') {
-          workModeScore = 10;
-        } else if (studentWorkMode === internshipMode) {
-          workModeScore = 10;
-        } else if (studentWorkMode === 'hybrid' || internshipMode === 'hybrid') {
-          workModeScore = 6;
-        } else {
-          workModeScore = 3;
-        }
-        totalScore += workModeScore;
-        breakdown.work_mode_match = workModeScore;
-
-        // ── 5. Industry Match (10 pts) ────────────────────────────────────
-        const companyIndustry = (internship.industry_sector || '').toLowerCase();
-        let industryScore = 0;
-        if (studentIndustries.length > 0 && companyIndustry) {
-          const hasMatch = studentIndustries.some(ind =>
-            companyIndustry.includes(ind) || ind.includes(companyIndustry)
-          );
-          industryScore = hasMatch ? 10 : 0;
-        } else {
-          industryScore = 5; // No preference set – neutral base
-        }
-        totalScore += industryScore;
-        breakdown.industry_match = industryScore;
-
-        const matchPercentage = Math.min(totalScore, 100);
-
-        let fitLevel, recommendation;
-        if (matchPercentage >= 80) {
-          fitLevel = 'Excellent Fit';
-          recommendation = 'This internship strongly matches your skills and preferences!';
-        } else if (matchPercentage >= 65) {
-          fitLevel = 'Good Fit';
-          recommendation = 'Good alignment with your profile. Highly recommended!';
-        } else if (matchPercentage >= 50) {
-          fitLevel = 'Moderate Fit';
-          recommendation = 'Some alignment. Consider if you want to explore new areas.';
-        } else {
-          fitLevel = 'Potential Growth';
-          recommendation = 'May stretch your current skills but could offer new experiences.';
-        }
-
-        return {
-          id: internship.id,
-          title: POSITION_TYPES.find(p => p.value === internship.position_type)?.label || internship.title,
-          internship_title: internship.title,
-          company_name: internship.company_name,
-          company_id: internship.company_id,
-          location: internship.location,
-          duration: internship.duration,
-          work_mode: internship.work_mode,
-          required_skills: internship.required_skills,
-          matchScore: totalScore,
-          matchPercentage,
-          matchBreakdown: breakdown,
-          fitLevel,
-          recommendation,
-        };
-      });
-
-      return matches.sort((a, b) => b.matchScore - a.matchScore);
+      // Re-apply POSITION_TYPES label override (display label vs stored value)
+      return rawMatches.map(m => ({
+        ...m,
+        title: POSITION_TYPES.find(p => p.value === internships.find(i => i.id === m.id)?.position_type)?.label || m.title,
+      }));
     } catch (err) {
       console.error('Error calculating matches:', err);
       return [];

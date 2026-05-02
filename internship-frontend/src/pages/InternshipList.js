@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { POSITION_TYPES, PROGRAMMING_LANGUAGES, INDUSTRIES, FRAMEWORKS_AND_TOOLS } from '../constants/matchingOptions';
+import { calculateMatchForInternship } from '../services/matchingEngine';
 import './InternshipList.css';
 
 const SALARY_RANGES = [
@@ -103,13 +104,23 @@ const InternshipList = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchInternships();
-    fetchFavoriteIds();
-    fetchPlatformSkills();
-    if (user?.user_type === 'student') {
-      fetchMatchingScores();
-      fetchInterestPrefs();
-    }
+    const init = async () => {
+      const [internshipsRes] = await Promise.all([
+        api.get('/internships').catch(() => ({ data: [] })),
+        fetchFavoriteIds(),
+        fetchPlatformSkills(),
+      ]);
+      const internshipList = internshipsRes.data || [];
+      setInternships(internshipList);
+      setLoading(false);
+
+      if (user?.user_type === 'student') {
+        fetchInterestPrefs();
+        const scoresMap = await fetchMatchingScores();
+        recalculateNewInternshipScores(scoresMap, internshipList);
+      }
+    };
+    init();
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchPlatformSkills = async () => {
@@ -157,18 +168,6 @@ const InternshipList = () => {
   };
 
   const toggleSection = (key) => setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
-
-  const fetchInternships = async () => {
-    try {
-      const response = await api.get('/internships');
-      setInternships(response.data);
-    } catch (err) {
-      console.error('Error fetching internships:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const fetchFavoriteIds = async () => {
     try {
       const response = await api.get('/favorites');
@@ -193,8 +192,63 @@ const InternshipList = () => {
         };
       });
       setMatchingScores(map);
+      return map;
     } catch (err) {
       console.error('Error fetching matching scores:', err);
+      return {};
+    }
+  };
+
+  // Auto-recalculate scores for internships posted after the student submitted their form
+  const recalculateNewInternshipScores = async (existingScoresMap, internshipList) => {
+    try {
+      const studentRes = await api.get('/students/profile');
+      const student = studentRes.data;
+      if (!student?.id || !student?.has_completed_interest_form) return;
+
+      const draftRes = await api.get('/students/interest-form-draft');
+      const studentData = draftRes.data?.draft;
+      if (!studentData) return;
+
+      const unscoredInternships = internshipList.filter(i => !existingScoresMap[i.id]);
+      if (unscoredInternships.length === 0) return;
+
+      const githubData = studentData.github_username
+        ? await api.get(`/github/score/${studentData.github_username}`).then(r => r.data).catch(() => null)
+        : null;
+
+      const newMatches = unscoredInternships.map(internship => {
+        const { matchScore, matchBreakdown } = calculateMatchForInternship(internship, studentData, githubData);
+        return {
+          internship_id: internship.id,
+          skill_match_score: matchBreakdown.skills_match ?? 0,
+          position_suitability: matchBreakdown.position_match ?? 0,
+          activity_score_github: matchBreakdown.github_total ?? 0,
+          work_mode_score: matchBreakdown.work_mode_match ?? 0,
+          industry_score: matchBreakdown.industry_match ?? 0,
+          overall_matching_score: matchScore,
+        };
+      });
+
+      await api.post('/matching/bulk', { student_id: student.id, matches: newMatches });
+
+      // Update local state immediately without a full refetch
+      setMatchingScores(prev => {
+        const updated = { ...prev };
+        newMatches.forEach(m => {
+          updated[m.internship_id] = {
+            overall: m.overall_matching_score,
+            skill: m.skill_match_score,
+            position: m.position_suitability,
+            work_mode: m.work_mode_score,
+            industry: m.industry_score,
+            github: m.activity_score_github,
+          };
+        });
+        return updated;
+      });
+    } catch (err) {
+      console.error('Error recalculating new internship scores:', err);
     }
   };
 
