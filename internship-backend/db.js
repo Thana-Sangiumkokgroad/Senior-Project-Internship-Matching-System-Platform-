@@ -10,6 +10,9 @@ const pool = new Pool({
   user:     decodeURIComponent(dbUrl.username),
   password: decodeURIComponent(dbUrl.password),
   ssl:      { rejectUnauthorized: false },
+  max: 5,                        // keep within Supabase free-tier connection limit
+  idleTimeoutMillis: 30000,      // release idle connections after 30s
+  connectionTimeoutMillis: 5000, // fail fast if DB is unreachable
 });
 
 pool.on('connect', () => {
